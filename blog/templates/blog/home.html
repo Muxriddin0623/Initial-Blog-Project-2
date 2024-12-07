@@ -1,0 +1,119 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <style>
+    .admin-section {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+}
+.admin-section .btn-warning {
+    color: #fff;
+    background-color: #ff9800;
+    border-color: #ff9800;
+}
+
+    </style>
+<h1>Welcome to the Blog</h1>
+    {% if user.is_authenticated %}
+        <a href="{% url 'new_post' %}" class="btn btn-primary">Add New Post</a>
+    {% endif %}
+
+ <div class="container mt-5">
+    <h2>Latest Posts</h2>
+    {% if latest_posts %}
+        <div class="row">
+            {% for post in latest_posts %}
+                <div class="col-md-4">
+                    <div class="card mb-3">
+                        <img src="{{ post.image.url }}" class="card-img-top" alt="Post Image">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ post.title }}</h5>
+                            <p class="card-text">{{ post.content|truncatechars:100 }}</p>
+                            <a href="{% url 'post_detail' post.pk %}" class="btn btn-primary">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No posts available yet.</p>
+    {% endif %}
+
+    {% if user.is_staff %}
+        <div class="mt-4">
+            <h2>Admin Section</h2>
+            <p>There are {{ unapproved_count }} posts pending approval.</p>
+            <a href="{% url 'pending_posts' %}" class="btn btn-warning">Review Pending Posts</a>
+        </div>
+    {% endif %}
+</div>
+
+<h2>Postlar</h2>
+{% for post in posts %}
+    <div class="post">
+        <h3><a href="/post/{{ post.id }}/">{{ post.title }}</a></h3>
+        <p>{{ post.content|truncatechars:200 }}</p>
+        {% if post.image %}
+            <img src="{{ post.image.url }}" style="width: 100px; height: auto;" alt="{{ post.title }}">
+        {% endif %}
+        <p><strong>Muallif:</strong> {{ post.author.username }}</p>
+        <p><strong>Kategoriyasi:</strong> {{ post.category }}</p>
+    </div>
+{% endfor %}
+<!-- Eng ko'p ko'rilgan postlar -->
+<h2>Most Viewed Posts</h2>
+    <ul>
+        {% for post in most_viewed %}
+            <li>
+                <a href="{% url 'post_detail' pk=post.pk %}">
+                    <img src="{{ post.image.url }}" alt="{{ post.title }}" style="width: 100px; height: auto;" width="100">
+                    {{ post.title }} ({{ post.views }} views)
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+<!-- Haftaning eng ommabop postlari -->
+<h2>Popular This Week</h2>
+    <ul>
+        {% for post in weekly_popular %}
+            <li>
+                <a href="{% url 'post_detail' pk=post.pk %}">
+                    <img src="{{ post.image.url }}" alt="{{ post.title }}" style="width: 100px; height: auto;" width="100">
+                    {{ post.title }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+<!-- Oyning eng ommabop postlari -->
+<h2>Popular This Month</h2>
+    <ul>
+        {% for post in monthly_popular %}
+            <li>
+                <a href="{% url 'post_detail' pk=post.pk %}">
+                    <img src="{{ post.image.url }}" alt="{{ post.title }}" style="width: 100px; height: auto;" width="100">
+                    {{ post.title }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+<!-- Tavsiya qilingan postlar -->
+<h2>Recommended Posts</h2>
+    <ul>
+        {% for post in recommended_posts %}
+            <li>
+                <a href="{% url 'post_detail' pk=post.pk %}">
+                    <img src="{{ post.image.url }}" alt="{{ post.title }}" style="width: 100px; height: auto;" width="100">
+                    {{ post.title }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

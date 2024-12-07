@@ -1,0 +1,35 @@
+{% extends "blog/base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Pending Posts for Approval</h1>
+
+    {% if posts %}
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Created At</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for post in posts %}
+                <tr>
+                    <td>{{ post.title }}</td>
+                    <td>{{ post.author }}</td>
+                    <td>{{ post.created_at }}</td>
+                    <td>
+                        <a href="{% url 'post_detail' post.pk %}" class="btn btn-info btn-sm">View</a>
+                        <a href="{% url 'approve_post' post.pk %}" class="btn btn-success btn-sm">Approve</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No posts pending approval.</p>
+    {% endif %}
+</div>
+{% endblock %}

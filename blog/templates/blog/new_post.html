@@ -1,0 +1,35 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Create New Post - My Blog{% endblock %}
+
+{% block content %}
+<h1>Create a New Post</h1>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input type="text" name="title" class="form-control" id="title" required>
+    </div>
+    <div class="mb-3">
+        <label for="content" class="form-label">Content</label>
+        <textarea name="content" class="form-control" id="content" rows="5" required></textarea>
+    </div>
+    <div class="mb-3">
+        <label for="category" class="form-label">Category</label>
+        <select name="category" class="form-select" id="category" required>
+            {% for category in categories %}
+                <option value="{{ category.id }}">{{ category.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="tags" class="form-label">Tags (comma-separated)</label>
+        <input type="text" name="tags" class="form-control" id="tags">
+    </div>
+    <div class="mb-3">
+        <label for="image" class="form-label">Image</label>
+        <input type="file" name="image" class="form-control" id="image">
+    </div>
+    <button type="submit" class="btn btn-primary">Create Post</button>
+</form>
+{% endblock %}
